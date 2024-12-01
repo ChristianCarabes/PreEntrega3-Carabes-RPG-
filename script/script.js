@@ -213,4 +213,72 @@ function pick(guess) {
   saveGameState();
 }
 
+function fetchData() {
+  fetch("https://jsonplaceholder.typicode.com/posts/1")
+    .then(response => {
+      if (!response.ok) throw new Error("Network response was not ok");
+      return response.json();
+    })
+    .then(data => {
+      text.innerText += `\nFetched Data: ${data.title}`;
+    })
+    .catch(error => {
+      text.innerText += `\nError fetching data: ${error.message}`;
+    });
+}
+
+function ajaxRequest() {
+  const xhr = new XMLHttpRequest();
+  xhr.open("GET", "https://jsonplaceholder.typicode.com/posts/2", true);
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      const data = JSON.parse(xhr.responseText);
+      text.innerText += `\nAJAX Data: ${data.title}`;
+    } else {
+      text.innerText += `\nError with AJAX: ${xhr.status}`;
+    }
+  };
+  xhr.onerror = function () {
+    text.innerText += "\nError with AJAX request";
+  };
+  xhr.send();
+}
+
+async function fetchAsync() {
+  try {
+    const response = await fetch("https://jsonplaceholder.typicode.com/posts/3");
+    if (!response.ok) throw new Error("Failed to fetch");
+    const data = await response.json();
+    text.innerText += `\nAsync/Await Data: ${data.title}`;
+  } catch (error) {
+    text.innerText += `\nAsync/Await Error: ${error.message}`;
+  }
+}
+
+function usePromises() {
+  new Promise((resolve, reject) => {
+    const success = Math.random() > 0.5;
+    setTimeout(() => (success ? resolve("Promise Resolved") : reject("Promise Rejected")), 1000);
+  })
+    .then(message => {
+      text.innerText += `\n${message}`;
+    })
+    .catch(error => {
+      text.innerText += `\n${error}`;
+    });
+}
+
+button1.onclick = function () {
+  goStore();
+  fetchData();
+};
+button2.onclick = function () {
+  goCave();
+  ajaxRequest();
+};
+button3.onclick = function () {
+  fightDragon();
+  fetchAsync();
+  usePromises();
+};
 
